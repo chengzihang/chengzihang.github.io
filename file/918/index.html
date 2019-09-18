@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>机试</title>
+		<link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	</head>
+		<!-- http//at.alicdn.com/t/font_1408227_ae4yy3uroog.css -->
+		<link rel="stylesheet" type="text/css" href="font/iconfont.css"/>
+		<style>
+			@font-face {font-family: 'iconfont';
+				src: url('iconfont.eot');
+				src: url('iconfont.eot?#iefix') format('embedded-opentype'),
+				url('iconfont.woff') format('woff'),
+				url('iconfont.ttf') format('truetype'),
+				url('iconfont.svg#iconfont') format('svg');
+			}
+			.iconfont{
+				font-family:"iconfont" !important;
+				font-size:0.32rem;font-style:normal;
+				-webkit-font-smoothing: antialiased;
+				-webkit-text-stroke-width: 0.004rem;
+				-moz-osx-font-smoothing: grayscale;}
+				div{
+					box-sizing: border-box !important;
+				}
+		</style>
+	<body>
+		<div id="app">
+		</div>
+		<script src="font/iconfont.js"></script>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+		<script src="./dist/build.js"></script>
+		<script>
+			
+			window.onload = function() {
+				/*750代表设计师给的设计稿的宽度，你的设计稿是多少，就写多少;
+				100代表换算比例，这里写100是为了以后好算,
+				比如，你测量的一个宽度是100px,就可以写为1rem,以及1px=0.01rem等等*/
+				getRem(750, 100)
+			};
+			window.onresize = function() {
+				getRem(750, 100)
+			};
+
+			function getRem(pwidth, prem) {
+				var html = document.getElementsByTagName("html")[0];
+				var oWidth = document.body.clientWidth || document.documentElement.clientWidth;
+				html.style.fontSize = oWidth / pwidth * prem + "px";
+			}
+		</script>
+
+	</body>
+</html>
