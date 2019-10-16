@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+				text-decoration: none;
+				color: black;
+			}
+			h6{
+				font-size: 18px;
+			}
+			span{
+				padding: 5px 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div style="height: 50px;background-color: #ccc;text-align: center;line-height: 50px;">
+				{{$route.params.title}}
+			</div>
+			
+			<router-view></router-view>
+		</div>
+		<template id="no1">
+			<div style="padding: 10px;padding-top: 0;">
+				<div style="padding-top: 10px;">
+					<p style="line-height: 40px;background: #ccc;">女生分类</p>
+					<div v-for="i in arr3.girl" style="padding: 10px 0;margin: 10px 0;border-bottom: solid 1px #ccc;">
+						<div v-for="(a,$key,$index) in i">
+							<a style="display: block;" :href="'#/no2/'+$key+'/'+a.cid+'/'+a.relatedName">
+								<h6 style="padding-bottom: 5px;">{{$key}}</h6>
+								<div>
+									<span v-for="b in a.list">{{b}}</span>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div>
+					<p style="line-height: 40px;background: #ccc;">男生分类</p>
+					<div v-for="i in arr3.boy" style="padding: 10px 0;margin: 10px 0;border-bottom: solid 1px #ccc;">
+						<div v-for="(a,$key,$index) in i">
+							<a style="display: block;"  :href="'#/no2/'+$key+'/'+a.cid+'/'+a.relatedName">
+								<h6>{{$key}}</h6>
+								<div>
+									<span v-for="b in a.list">{{b}}</span>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
+		<template id="no2">
+			<div>
+				<div style="overflow: hidden;border-bottom: solid 1px #ccc;border-top: solid 1px #ccc;margin: 5px 0;">
+					<div style="float: left;padding: 4px;margin:0 10px;">全部</div>
+					<div style="float: left;padding: 4px;margin:0 10px;"  v-for="i in arr.class">{{i.name}}</div>
+					<div style="float: left;padding: 4px;margin:0 10px;"  v-for="i in arr.tag">{{i.name}}</div>
+				</div>
+				<div>
+					<div v-for="i in arr2" style="border-bottom: solid 1px #ccc;overflow: hidden;margin-bottom: 5px;">
+						<div style="float: left;width: 80px;height: 100px;padding: 4px;">
+							<img :src="i.cover" style="width: 100%;height: 100%;">
+						</div>
+						<div style="float: left;width: 90%;height: 100px;padding: 4px 0;">
+							<div style="font-size: 18px;line-height: 30px;">{{i.title}}</div>
+							<div style="font-size: 14px;">{{i.author}}</div>
+							<div style="width: 90%;overflow: hidden;font-size: 12px;">{{i.desc}}</div>
+							<div>
+								<!-- {{i}} -->
+								<!-- <span v-for="c in i.tags">{{c}}</span> -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
+	</body>
+	<script src="vue.js"></script>
+	<script src="vue-resource.js"></script>
+	<script src="vue-router.js"></script>
+	<script>
+		var bus = new Vue()
+		var no1 = {
+			template:'#no1',
+			data(){
+				return{
+					arr3:[],
+				}
+			},
+			created(){
+				this.$http.post('http://walden1.shuqireader.com/webapi/rank/classrelation?_=1571217539678',{
+					type: 1,
+					timestamp: 1571217539676,
+					sign: 'a062d47377204af0223a0dec4d8aec59',
+					shuqi_h5: '',
+				},{emulateJSON:true}).then(data=>{
+					// console.log(data.data.data)
+					this.arr3 = data.data.data;
+				})
+			}
+			
+		}
+		var no2  = {
+			template:'#no2',
+			data(){
+				return{
+					arr2:'',
+					arr:[]
+				}
+			},
+			created(){
+					var uid = this.$route.params.uid;
+					var name = this.$route.params.name;
+
+					this.$http.post('http://walden1.shuqireader.com/webapi/rank/classrelation?_=1571220235971',{
+						type: 2,
+						cid: uid,
+						timestamp: 1571220235968,
+						sign: '4e97b9d8142361752e1e4fb5c0b48134',
+						shuqi_h5: '',
+					},{emulateJSON:true}).then(data=>{
+						this.arr = data.data.data;
+					})
+
+					this.$http.get('http://read.xiaoshuo1-sm.com/novel/i.php?do=is_caterank&p=1&page=1&words=&shuqi_h5=&onlyCpBooks=1&secondCate=%E7%8E%B0%E4%BB%A3%E8%A8%80%E6%83%85&sort=monthHot&_=1571222214835',{
+						params:{
+							do: 'is_caterank',
+							p: 1,
+							page: 1,
+							words: '',
+							shuqi_h5: '',
+							onlyCpBooks: 1,
+							secondCate: name,
+							sort: 'monthHot',
+							_: 1571222214835,
+						}
+					}).then(data=>{
+						// console.log(data.data.data)
+						this.arr2 = data.data.data
+					})
+				}
+		}
+		var routes = [
+			{
+				path:'/', redirect:'/no1/分类',
+				},
+			{
+				path:'/no1/:title',
+				component:no1,
+			},
+			{
+				path:'/no2/:title/:uid/:name',
+				component:no2,
+				},
+		]
+		var router = new VueRouter({routes})
+		new Vue({
+			el:'#box',
+			router,
+		})
+	</script>
+</html>
