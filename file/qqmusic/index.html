@@ -101,10 +101,13 @@
 			.hang:hover{
 				background-color: #ccc;
 			}
+			[v-cloak]{
+				display: none;
+			}
 		</style>
 	</head>
 	<body>
-		<div id="box">
+		<div id="box"v-cloak>
 			<div class="m-header">
 				<div v-for="i in nav_arr" class="m-list">
 					<a :href="i.path">{{i.text}}</a>
